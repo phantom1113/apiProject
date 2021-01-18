@@ -10,3 +10,4 @@ public interface StatusRepository extends JpaRepository<Status, Integer>{
 
 	public Status findByName(String name);
 }
+
