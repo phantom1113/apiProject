@@ -12,17 +12,19 @@ import lombok.Setter;
 public class UserDetailDto {
 	int id;
 	String fullName;
+	String avatar;
 	List<TaskDto> unfilunfulfilledTask;
 	List<TaskDto> completedTask;
 	List<TaskDto> processingTask;
 	
-	public UserDetailDto(int id, String fullName, List<TaskDto> unfilunfulfilledTask, List<TaskDto> completedTask,
+	public UserDetailDto(int id, String fullName, String avatar, List<TaskDto> unfilunfulfilledTask, List<TaskDto> completedTask,
 			List<TaskDto> processingTask) {
 		super();
 		this.id = id;
 		this.fullName = fullName;
+		this.avatar = avatar;
 		this.unfilunfulfilledTask = unfilunfulfilledTask;
 		this.completedTask = completedTask;
 		this.processingTask = processingTask;
-	}	
+	}
 }
