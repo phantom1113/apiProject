@@ -3,6 +3,7 @@ package com.myclass.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.myclass.dto.UserDto;
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
 			User user = new User();
 			user.setEmail(dto.getEmail());
 			user.setFullName(dto.getFullName());
-			user.setPassword(dto.getPassword());
+			user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
 			user.setAvatar(dto.getAvatar());
 			user.setRoleId(dto.getRoleId());
 			userRepository.save(user);
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
 			user.setEmail(dto.getEmail());
 			user.setFullName(dto.getFullName());
 			if(!dto.getPassword().equals("")) {
-				user.setPassword(dto.getPassword());
+				user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
 			}
 			user.setAvatar(dto.getAvatar());
 			user.setRoleId(dto.getRoleId());
