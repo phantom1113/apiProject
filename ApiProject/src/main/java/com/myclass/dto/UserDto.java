@@ -22,7 +22,6 @@ public class UserDto {
 	@NotEmpty(message = "Fullname không được bỏ trống")
 	private String fullName;
 	
-	@NotEmpty(message = "Avatar không được bỏ trống")
 	private String avatar;
 	
 	@NotNull(message = "Role không được bỏ trống")

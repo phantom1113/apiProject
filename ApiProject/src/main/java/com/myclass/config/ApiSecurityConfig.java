@@ -52,7 +52,7 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter{
 		.permitAll()
 		.antMatchers("/api/role/**")
 		.hasAnyRole("ADMIN")
-		.antMatchers("/api/user*")
+		.antMatchers("/api/user/**")
 		.hasAnyRole("ADMIN", "MANAGER")
 		.anyRequest()
 		.authenticated();

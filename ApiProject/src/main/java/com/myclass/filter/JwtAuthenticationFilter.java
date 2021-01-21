@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import io.jsonwebtoken.Jwts;
 
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
+	@SuppressWarnings("unused")
 	private AuthenticationManager authenticationManager;
 	private UserDetailsService userDetailsService;
 

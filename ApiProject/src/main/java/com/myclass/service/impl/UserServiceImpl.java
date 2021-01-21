@@ -3,21 +3,27 @@ package com.myclass.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myclass.dto.UserDto;
 import com.myclass.dto.UserEditDto;
 import com.myclass.entity.User;
 import com.myclass.repository.UserRepository;
+import com.myclass.service.AmazonClientService;
 import com.myclass.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
+	private AmazonClientService amazonClientService;
 
-	public UserServiceImpl(UserRepository userRepository) {
-		super();
+	public UserServiceImpl(UserRepository userRepository, AmazonClientService amazonClientService) {
+		this.amazonClientService = amazonClientService;
 		this.userRepository = userRepository;
 	}
 
@@ -34,7 +40,7 @@ public class UserServiceImpl implements UserService {
 					dto.setId(user.getId());
 					dto.setPassword(user.getPassword());
 					dto.setAvatar(user.getAvatar());
-					dto.setRoleId(user.getId());
+					dto.setRoleId(user.getRoleId());
 					dto.setRoleDesc(user.getRole().getDesc());
 					dtos.add(dto);
 				}
@@ -47,13 +53,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int add(UserDto dto) {
+	public int add(UserDto dto, MultipartFile file) {
 		try {
 			User user = new User();
 			user.setEmail(dto.getEmail());
 			user.setFullName(dto.getFullName());
 			user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
-			user.setAvatar(dto.getAvatar());
+			user.setAvatar(amazonClientService.uploadFile(file));
 			user.setRoleId(dto.getRoleId());
 			userRepository.save(user);
 			return 0;
@@ -76,15 +82,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public int edit(UserEditDto dto) {
+	public int edit(UserEditDto dto, MultipartFile file) {
 		try {
 			User user = userRepository.findById(dto.getId()).get();
 			user.setEmail(dto.getEmail());
 			user.setFullName(dto.getFullName());
-			if(!dto.getPassword().equals("")) {
+			if(dto.getPassword() != null) {
 				user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
 			}
-			user.setAvatar(dto.getAvatar());
+			amazonClientService.deleteFile(user.getAvatar());
+			user.setAvatar(amazonClientService.uploadFile(file));
 			user.setRoleId(dto.getRoleId());
 			userRepository.save(user);
 			return 0;
@@ -142,6 +149,32 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	@Override
+	public UserDto getUserByFullname(String fullname) {
+		try {
+			User user = userRepository.findUserByFullname(fullname);
+			if (user != null) {
+				UserDto dto = new UserDto();
+				dto.setId(user.getId());
+				dto.setEmail(user.getEmail());
+				dto.setPassword(user.getPassword());
+				dto.setFullName(user.getFullName());
+				dto.setAvatar(user.getAvatar());
+				dto.setRoleId(user.getRoleId());
+				return dto;
+			}
+			return null;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public Page<UserDto> getAllUser(int pageIndex, int pageSize) {
+		Pageable pageable = PageRequest.of(pageIndex, pageSize);
+		return userRepository.findAllUserRole(pageable);
 	}
 
 }

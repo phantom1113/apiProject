@@ -47,17 +47,16 @@ public class ApiRoleController {
 		}
 		
 	}
+	
 	@PostMapping("")
 	public ResponseEntity<Object> add(@RequestBody RoleDto dto) {
-		try {
-	
+		try {	
 			roleService.add(dto);
 			return new ResponseEntity<Object>("Thêm thành công!", HttpStatus.CREATED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-		}
-		
+		}		
 	}
 	
 	@PutMapping("{id}")
@@ -65,7 +64,6 @@ public class ApiRoleController {
 		try {
 			if(roleService.findById(id) == null)
 				return new ResponseEntity<Object>("Không tìm thấy dữ liệu!", HttpStatus.BAD_REQUEST);
-			
 			roleService.edit(id, dto);
 			return new ResponseEntity<Object>("Cập nhật thành công!", HttpStatus.OK);
 		} catch (Exception e) {
