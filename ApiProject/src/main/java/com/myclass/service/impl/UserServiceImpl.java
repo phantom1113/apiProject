@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
 			user.setEmail(dto.getEmail());
 			user.setFullName(dto.getFullName());
 			if(dto.getPassword() != null) {
+				System.out.println(dto.getPassword());
 				user.setPassword(new BCryptPasswordEncoder().encode(dto.getPassword()));
 			}
 			amazonClientService.deleteFile(user.getAvatar());
@@ -175,6 +176,15 @@ public class UserServiceImpl implements UserService {
 	public Page<UserDto> getAllUser(int pageIndex, int pageSize) {
 		Pageable pageable = PageRequest.of(pageIndex, pageSize);
 		return userRepository.findAllUserRole(pageable);
+	}
+
+	@Override
+	public UserDto findByEmail(String email) {
+		try {
+			return userRepository.findByEmail(email);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 }

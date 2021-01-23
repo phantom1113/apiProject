@@ -19,6 +19,8 @@ public interface UserService {
 	
 	public UserDto findById(int id);
 	
+	public UserDto findByEmail(String email);
+	
 	public UserEditDto findByIdForEdit(int id);
 	
 	public List<UserDto> findUserRoleName(String name);

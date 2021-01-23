@@ -51,6 +51,9 @@ public class ApiUserController {
 	@PostMapping("")
 	public ResponseEntity<Object> add(@RequestPart(value = "file") MultipartFile file, @RequestPart(value = "user") UserDto dto){
 		try {
+			if(userService.findByEmail(dto.getEmail())!= null) {
+				return new ResponseEntity<Object>("Email đã tồn tại!", HttpStatus.BAD_REQUEST);
+			}
 			userService.add(dto, file);
 			return new ResponseEntity<Object>("Thêm thành công!", HttpStatus.CREATED);
 		} catch (Exception e) {
