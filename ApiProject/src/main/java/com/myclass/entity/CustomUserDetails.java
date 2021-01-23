@@ -6,7 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 //Class dùng để custom thông tin của UserDetail dung xác thực và phân quyền
-public class CustomUserDetail extends org.springframework.security.core.userdetails.User implements UserDetails{
+public class CustomUserDetails extends org.springframework.security.core.userdetails.User implements UserDetails{
 	private static final long serialVersionUID = 1L;
 
 	private String avatar;
@@ -17,7 +17,7 @@ public class CustomUserDetail extends org.springframework.security.core.userdeta
 	
 	private String roleName;
 	
-	public CustomUserDetail(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+	public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
 	}
 

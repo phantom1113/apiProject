@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.myclass.entity.CustomUserDetails;
+
 import io.jsonwebtoken.Jwts;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -33,7 +35,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			// B2: Giải ngược token => Lấy email đã lưu vào token ở bước đăng nhập
 			String email = Jwts.parser().setSigningKey("chuoi_bi_mat").parseClaimsJws(authorization).getBody().getSubject();
 			// B3: Truy vấn DB lấy thông tin user(Sử dụng email vừa lấy từ token)
-			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+			CustomUserDetails userDetails = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
 			// B4: Lưu thông tin user vào securityContext(để phân quyền)
 			SecurityContextHolder.getContext().setAuthentication(
 					new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));

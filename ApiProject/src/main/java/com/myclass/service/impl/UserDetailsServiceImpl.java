@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.myclass.constants.MessageConstants;
 import com.myclass.dto.UserDto;
-import com.myclass.entity.CustomUserDetail;
+import com.myclass.entity.CustomUserDetails;
 import com.myclass.repository.UserRepository;
 
 @Service
@@ -38,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		authorities.add(new SimpleGrantedAuthority(dto.getRoleName()));
 		
 		//Lấy thông tin đăng nhập
-		CustomUserDetail customUserDetail = new CustomUserDetail(email, dto.getPassword(), authorities);
+		CustomUserDetails customUserDetail = new CustomUserDetails(email, dto.getPassword(), authorities);
 		customUserDetail.setAvatar(dto.getAvatar());
 		customUserDetail.setId(dto.getId());
 		customUserDetail.setFullName(dto.getFullName());
