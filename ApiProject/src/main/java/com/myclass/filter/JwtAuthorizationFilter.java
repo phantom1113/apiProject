@@ -16,14 +16,11 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import io.jsonwebtoken.Jwts;
 
-public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
-	@SuppressWarnings("unused")
-	private AuthenticationManager authenticationManager;
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	private UserDetailsService userDetailsService;
 
-	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserDetailsService userDetailsService) {
 		super(authenticationManager);
-		this.authenticationManager = authenticationManager;
 		this.userDetailsService = userDetailsService;
 	}
 

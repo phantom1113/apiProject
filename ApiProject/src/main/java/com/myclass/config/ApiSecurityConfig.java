@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.myclass.filter.JwtAuthenticationFilter;
+import com.myclass.filter.JwtAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -58,7 +58,7 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter{
 		.authenticated();
 		
 		//Sử dụng JWTAuthorizationFilter để check token => Để lấy thông tin người dùng
-		http.addFilter(new JwtAuthenticationFilter(authenticationManager(), userDetailService));
+		http.addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailService));
 		
 		//Cấu hình không sử dụng Session để lưu thông tin user
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
