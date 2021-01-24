@@ -46,14 +46,15 @@ public class ApiSecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 		.csrf().disable()
-		.antMatcher("/api/*")
+	    .antMatcher("/api/**")
 		.authorizeRequests()
-		.antMatchers("/api/auth/login", "/api/auth/register")
-		.permitAll()
-		.antMatchers("/api/role/**")
-		.hasAnyRole("ADMIN")
-		.antMatchers("/api/user/**")
-		.hasAnyRole("ADMIN", "MANAGER")
+		.antMatchers("/api/auth/login", "/api/auth/register").permitAll()
+		.antMatchers("/api/role/**").hasAnyRole("ADMIN")
+		.antMatchers("/api/user/**").hasAnyRole("ADMIN","MANAGER")
+		.antMatchers("/api/project/edit**","/api/project/delete**","/api/project/add**").hasAnyRole("MANAGER")
+		.antMatchers("/api/project/**").hasAnyRole("ADMIN","MANAGER")
+		.antMatchers("/api/task/edit**","/api/task/delete**","/api/task/add**").hasAnyRole("MANAGER")
+		.antMatchers("/api/task/**").hasAnyRole("MANAGER","USER")
 		.anyRequest()
 		.authenticated();
 		

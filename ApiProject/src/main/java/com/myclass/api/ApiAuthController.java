@@ -10,7 +10,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.myclass.dto.LoginDto;
+import com.myclass.entity.CustomUserDetails;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -50,15 +50,15 @@ public class ApiAuthController {
 	
 	private String generateToken(Authentication authentication) {
 		// Đoạn JWT_SECRET bí mật
-		final String JWT_SECRET = "chuoi_bi_mat";
+		final String JWT_SECRET = "secret";
 		//Thời gian có hiệu lực của chuỗi jwt(10 ngày)
 		final long JWT_EXPIRATION = 864000000L;
 		Date now = new Date();
 		Date expireDate = new Date(now.getTime() + JWT_EXPIRATION);
 		
-		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 		String token = Jwts.builder()
-				.setSubject(userDetails.getUsername())
+				.setSubject(customUserDetails.getUsername())
 				.setIssuedAt(now)
 				.setExpiration(expireDate)
 				.signWith(SignatureAlgorithm.HS256, JWT_SECRET)
