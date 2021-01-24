@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.myclass.dto.AuthenticatedUserDto;
 import com.myclass.dto.UserDto;
 import com.myclass.dto.UserEditDto;
 import com.myclass.entity.User;
@@ -182,6 +183,21 @@ public class UserServiceImpl implements UserService {
 	public UserDto findByEmail(String email) {
 		try {
 			return userRepository.findByEmail(email);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public AuthenticatedUserDto findByEmailForAuthentication(String email) {
+		try {
+			UserDto user = userRepository.findByEmail(email);
+			if (user != null) {
+				AuthenticatedUserDto dto = new AuthenticatedUserDto(user.getEmail(), user.getFullName(),
+						user.getAvatar());
+				return dto;
+			}
+			return null;
 		} catch (Exception e) {
 			return null;
 		}

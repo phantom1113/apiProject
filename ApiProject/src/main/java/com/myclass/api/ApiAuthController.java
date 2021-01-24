@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myclass.dto.AuthenticatedUserDto;
 import com.myclass.dto.LoginDto;
 import com.myclass.entity.CustomUserDetails;
+import com.myclass.service.UserService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -28,6 +30,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class ApiAuthController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private UserService userService;
 
 	@PostMapping("login")
 	public ResponseEntity<Object> login(@RequestBody LoginDto dto) {
@@ -36,8 +41,9 @@ public class ApiAuthController {
 			Authentication authentication = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			String token = generateToken(authentication);
-			return new ResponseEntity<Object>(token, HttpStatus.OK);
+			AuthenticatedUserDto user = userService.findByEmailForAuthentication(dto.getEmail());
+			user.setToken(generateToken(authentication));
+			return new ResponseEntity<Object>(user, HttpStatus.OK);
 		}
 		catch (BadCredentialsException e) {
 			return new ResponseEntity<Object>("Sai tên đăng nhập hoặc mật khẩu",HttpStatus.UNAUTHORIZED);

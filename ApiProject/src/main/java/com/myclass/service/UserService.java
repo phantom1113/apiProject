@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.myclass.dto.AuthenticatedUserDto;
 import com.myclass.dto.UserDto;
 import com.myclass.dto.UserEditDto;
 
@@ -20,6 +21,8 @@ public interface UserService {
 	public UserDto findById(int id);
 	
 	public UserDto findByEmail(String email);
+	
+	public AuthenticatedUserDto findByEmailForAuthentication(String email);
 	
 	public UserEditDto findByIdForEdit(int id);
 	
