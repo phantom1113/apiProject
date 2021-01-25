@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.myclass.dto.ProjectDto;
 import com.myclass.entity.CustomUserDetails;
+import com.myclass.entity.Project;
 import com.myclass.service.ProjectService;
 import com.myclass.service.TaskService;
 
@@ -28,7 +30,7 @@ import com.myclass.service.TaskService;
 public class ApiProjectController {
 	@Autowired
 	ProjectService projectService;
-	
+
 	@Autowired
 	TaskService taskService;
 
@@ -43,8 +45,7 @@ public class ApiProjectController {
 				dtos = projectService.findByManagerId(userId);
 			} else if (roleName.equals("ROLE_ADMIN")) {
 				dtos = projectService.findAll();
-			}
-			else if (roleName.equals("ROLE_USER")) {
+			} else if (roleName.equals("ROLE_USER")) {
 				return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<Object>(dtos, HttpStatus.OK);
@@ -52,9 +53,9 @@ public class ApiProjectController {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@PostMapping("")
-	public ResponseEntity<Object> add(@RequestBody ProjectDto dto){
+	public ResponseEntity<Object> add(@RequestBody ProjectDto dto) {
 		try {
 			projectService.add(dto);
 			return new ResponseEntity<Object>("Thêm thành công!", HttpStatus.CREATED);
@@ -62,11 +63,11 @@ public class ApiProjectController {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@PutMapping("{id}")
-	public ResponseEntity<Object> edit(@PathVariable("id") int id, @RequestBody ProjectDto dto){
+	public ResponseEntity<Object> edit(@PathVariable("id") int id, @RequestBody ProjectDto dto) {
 		try {
-			if(projectService.findById(id) == null) {
+			if (projectService.findById(id) == null) {
 				return new ResponseEntity<Object>("Không tìm thấy dữ liệu!", HttpStatus.BAD_REQUEST);
 			}
 			projectService.edit(id, dto);
@@ -75,9 +76,9 @@ public class ApiProjectController {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@DeleteMapping("{id}")
-	public ResponseEntity<Object> delete(@PathVariable("id") int id, @RequestBody ProjectDto dto){
+	public ResponseEntity<Object> delete(@PathVariable("id") int id, @RequestBody ProjectDto dto) {
 		try {
 			projectService.deleteById(id);
 			return new ResponseEntity<Object>(HttpStatus.OK);
@@ -85,26 +86,52 @@ public class ApiProjectController {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping("{id}/alltasks")
-	public ResponseEntity<Object> getAllTaskOfProject(@PathVariable("id") int id){
+	public ResponseEntity<Object> getAllTaskOfProject(@PathVariable("id") int id) {
 		try {
-			if(projectService.findById(id) == null) {
+			if (projectService.findById(id) == null) {
 				return new ResponseEntity<Object>("Dự án không tồn tại!", HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<Object>(taskService.getAllTaskInProject(id),HttpStatus.OK);
+			return new ResponseEntity<Object>(taskService.getAllTaskInProject(id), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	@GetMapping("{id}/statistic")
-	public ResponseEntity<Object> getStatisticalNumbers(@PathVariable("id") int id){
+	public ResponseEntity<Object> getStatisticalNumbers(@PathVariable("id") int id) {
 		try {
-			if(projectService.findById(id) == null) {
+			if (projectService.findById(id) == null) {
 				return new ResponseEntity<Object>("Dự án không tồn tại!", HttpStatus.BAD_REQUEST);
 			}
-			return new ResponseEntity<Object>(taskService.countStatusTaskInProject(id),HttpStatus.OK);
+			return new ResponseEntity<Object>(taskService.countStatusTaskInProject(id), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@GetMapping("paging/{pageIndex}/{pageSize}")
+	public ResponseEntity<Object> getUserPaging(@PathVariable("pageIndex") int pageIndex,
+			@PathVariable("pageSize") int pageSize) {
+		try {
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String roleName = ((CustomUserDetails) principal).getRoleName();
+			int userId = ((CustomUserDetails) principal).getId();
+			Page<Project> results = null;
+			if (pageIndex < 1 || pageSize < 1) {
+				return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+			}
+			if (roleName.equals("ROLE_MANAGER")) {
+				results = projectService.findAllProjectOfManager(pageIndex - 1, pageSize, userId);
+			} else if (roleName.equals("ROLE_ADMIN")) {
+				results = projectService.findAllProject(pageIndex - 1, pageSize);
+			}
+			if (results.getSize() > 0) {
+				return new ResponseEntity<Object>(results, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}

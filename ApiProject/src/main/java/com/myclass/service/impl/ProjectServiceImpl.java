@@ -3,6 +3,9 @@ package com.myclass.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.myclass.dto.ProjectDto;
@@ -116,4 +119,17 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 	}
 
+	@Override
+	public Page<Project> findAllProject(int pageIndex, int pageSize) {
+		Pageable pageable = PageRequest.of(pageIndex, pageSize);
+		return projectRepository.findAllProject(pageable);
+	}
+
+	@Override
+	public Page<Project> findAllProjectOfManager(int pageIndex, int pageSize, int id) {
+		Pageable pageable = PageRequest.of(pageIndex, pageSize);
+		return projectRepository.findAllProjectOfManager(pageable, id);
+	}
+
+	
 }
