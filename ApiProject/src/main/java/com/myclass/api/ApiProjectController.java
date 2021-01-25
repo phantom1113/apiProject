@@ -33,7 +33,7 @@ public class ApiProjectController {
 	TaskService taskService;
 
 	@GetMapping("")
-	public ResponseEntity<Object> getAllUser() {
+	public ResponseEntity<Object> getAll() {
 		try {
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			String roleName = ((CustomUserDetails) principal).getRoleName();
