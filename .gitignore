@@ -1,11 +1,5 @@
 /ApiProject/
 
-# Created by https://www.toptal.com/developers/gitignore/api/eclipse
-# Edit at https://www.toptal.com/developers/gitignore?templates=eclipse
-
-git rm --cached application.properties
-
-
 ### Eclipse ###
 .metadata
 bin/
@@ -71,4 +65,5 @@ tmp/
 # Spring Boot Tooling
 .sts4-cache/
 
+application*
 # End of https://www.toptal.com/developers/gitignore/api/eclipse
