@@ -11,8 +11,7 @@ tmp/
 *.bak
 *.swp
 *~.nib
-application.properties
-local.yml
+./src/main/resources
 .settings/
 .loadpath
 .recommenders
