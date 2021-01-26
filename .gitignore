@@ -3,6 +3,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=eclipse
 
+git rm --cached application.properties
+
+
 ### Eclipse ###
 .metadata
 bin/
@@ -11,7 +14,6 @@ tmp/
 *.bak
 *.swp
 *~.nib
-**/.properties
 .settings/
 .loadpath
 .recommenders
