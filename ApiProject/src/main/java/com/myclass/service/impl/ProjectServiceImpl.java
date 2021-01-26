@@ -128,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public Page<Project> findAllProjectOfManager(int pageIndex, int pageSize, int id) {
 		Pageable pageable = PageRequest.of(pageIndex, pageSize);
-		return projectRepository.findAllProjectOfManager(pageable, id);
+ 		return projectRepository.findAllProjectOfManager(pageable, id);
 	}
 
 	
