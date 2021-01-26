@@ -1,5 +1,0 @@
-amazonProperties:
-  endpointUrl: https://s3.us-east-2.amazonaws.com
-  accessKey: AKIAUSCHKIVMSOYAUC62
-  secretKey: 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
-  bucketName: myclass-image-upload
